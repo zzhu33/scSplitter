@@ -14,6 +14,7 @@ Hardware requirements are dependent on CPU and input size:
   - memory: >500 MB per logical processor, 1 GB per logical processor recommended
 ### Dependencies
 python 3.6.4 or 3.7.4
+
 bowtie2 2.3.2 or later
   
 **python packages**
@@ -33,7 +34,7 @@ python3 <name>.py [options] --n <input_name> --i <input_directory> --r <output_d
 ```
 note: syntax is not strictly enforced and inputs can be in any order that is suitable to the user.
 
-**example run:**
+**Example run:**
 
 install numpy and pandas if needed:
 ```
@@ -44,4 +45,4 @@ run <name>:
 ```
 $home/<name> python3 <name>.py --cc 1000 --sc 10000 --n hgmm_100_S1_L001_I1_001.fastq --i /home/<name>_testing/fastqs --r /home/<name>_testing/test_run 
 ```
-
+Results will be written to `/home/<name>_testing/test_run` along with intermediate files. However, all intermediate files except sorted sams will be deleted. The results will be in `/home/<name>_testing/test_run/results`. There will be directories corresponding to each sample index that met the sample index read cuttoff (10000, `--sc 10000`), and numerous fastqs inside each directory, one for each cell barcode that met the specified cuttoff (1000, `--cc 1000`).
