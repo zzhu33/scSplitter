@@ -22,7 +22,7 @@ bowtie2 2.3.2 or later
 numpy, pandas
 
 ## Tutorial
-This tutorial will guide the user in processing a sample scRNA seq result from 10x genomic. 
+This tutorial will guide the user in processing a sample scRNA seq result from 10x Genomic. 
 ### Inputs
 The example inputs are [sample fastqs](http://cf.10xgenomics.com/samples/cell-exp/1.2.0/hgmm_100/hgmm_100_fastqs.tar) from 10x Genomics. The tarball needs to be extracted, although the individual files can be left as .fastq.gz files, or extracted fully as .fastq files. 
 
