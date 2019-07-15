@@ -1,3 +1,3 @@
-[logo](QBRC.jpg)
+![logo](QBRC.jpg)
 # test
 test repository
