@@ -49,7 +49,7 @@ run <name>:
 $home/<name> python3 <name>.py --cc 1000 --sc 10000 --n hgmm_100_S1_L001_I1_001.fastq --i /home/<name>_testing/fastqs --r /home/<name>_testing/test_run 
 ```
 
-If Bowtie2 index was not placed in the default location `/home/<name>/bowtie2`, add `--ind <path>/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index` to the run command.
+If Bowtie2 index was not placed in the default location, add `--ind <path>/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index` to the run command.
 ### Results
 Results will be written to `/home/<name>_testing/test_run` along with intermediate files and summary log. However, all intermediate files except sorted sams will be deleted. If the output directory does not exist, it will be automatically created.  The results will be in `/home/<name>_testing/test_run/results`. By default, the results are compressed fastq files. There will be directories corresponding to each sample index that met the sample index read cuttoff (10000 reads, `--sc 10000`), and numerous fastqs inside each directory, one for each cell barcode that met the specified cuttoff (1000 reads, `--cc 1000`).
 A log ,`summary.txt`, is also provided, which includes run parameters and run times, as well as other information about the run. 
