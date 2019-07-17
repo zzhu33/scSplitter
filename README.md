@@ -1,7 +1,7 @@
 ![logo](QBRC.jpg)
 # FASTR
 ## Introduction
-FASTR (**F**astq **A**lignment-based **S**or**T**ing of sc**R**NA seq reads) is a preprocessing tool designed to convert scRNA seq results into a format compatible with analysis tools designed for general high-throughput sequencing data such as DNA seq. The main advantage of scRNA seq is that it allows researchers to sequence individual cells, whereas more traditional techniques sequence the aggregate genetic material from a population of cells. However, this means that scRNA seq results contain a mix of reads from perhaps thousands of diffrent cells. <name> seperates sequecing reads from scRNAseq by their cell of origin and performs a preliminary filter using bowtie2 alignment, producing high-quality inputs that is compatible with existing custom analysis tools.
+FASTR (**F**astq **A**lignment-based **S**or**T**ing of sc**R**NA seq reads) is a preprocessing tool designed to convert scRNA seq results into a format compatible with analysis tools designed for general high-throughput sequencing data such as DNA seq. The main advantage of scRNA seq is that it allows researchers to sequence individual cells, whereas more traditional techniques sequence the aggregate genetic material from a population of cells. However, this means that scRNA seq results contain a mix of reads from perhaps thousands of diffrent cells. FASTR seperates sequecing reads from scRNAseq by their cell of origin and performs a preliminary filter using bowtie2 alignment, producing high-quality inputs that is compatible with existing custom analysis tools.
 ## Getting started
 ### Installation
 FASTR is written in python can be installed from its [GitHub page](https://github.com/zzhu33/test).
@@ -22,7 +22,7 @@ python 3.6.4 or 3.7.4
 numpy, pandas
 
 
-It is recommended to create a `bowtie2` directory in the installation directory and then dowload and extract the [human GRCh38](ftp://ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index.tar.gz) Bowtie2 reference index to the directory. This is the default reference index for alignment. Users can also specify any reference index explicitly with `--ind` using Bowtie2 syntax. Ex: `--ind /home/bowtie_inds/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index`.
+It is recommended to create a `bowtie2_index` directory in the installation directory and then dowload and extract the [human GRCh38](ftp://ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index.tar.gz) Bowtie2 reference index to the directory. This is the default reference index for alignment. Users can also specify any reference index explicitly with `--ind` using Bowtie2 syntax. Ex: `--ind /home/bowtie_inds/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index`. Alternatively, users can also edit `bowtie2indexdir` and `bowtie2indexname` to point FASTR to an index by default.
 
 ## Tutorial
 This tutorial will guide the user in processing a sample scRNA seq result from 10x Genomic. 
@@ -33,13 +33,13 @@ The example inputs are [sample fastqs](http://cf.10xgenomics.com/samples/cell-ex
 
 ![example_fastq](input_fastq.PNG)
 
-Note that the input filnames need to follow the folowing convention: 
+Note that the input filenames need to follow the folowing convention: 
 ```
 <sample_name>_S1_L00<lane_number>_<read_type>_001.fastq.gz`
 ```
 where `<read_type>` is R1, R2, or I1.
 
-The example reference index is the [human GRCh38](ftp://ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index.tar.gz) index provided by [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml). Please refer to the Bowtie2 [manual](http://bowtie-bio.sourceforge.net/bowtie2/manual.shtml) for its installation instructions, if needed. This is the default Bowtie2 reference index and should be placed in `<name>/bowtie2`, as shown in the installation instructions. However, any index from any accessible directory can be used.
+The example reference index is the [human GRCh38](ftp://ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index.tar.gz) index provided by [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml). Please refer to the Bowtie2 [manual](http://bowtie-bio.sourceforge.net/bowtie2/manual.shtml) for its installation instructions, if needed. This is the default Bowtie2 reference index and should be placed in `FASTR/bowtie2`, as shown in the installation instructions. However, any index from any accessible directory can be used.
 ### Running FASTR
 Usage:
 ```
@@ -72,7 +72,9 @@ A closer examination of the results would reveal that results from each sample a
 ```
 $home/<name> python3 FASTR.py --ig True --cc 1000 --sc 100000 --n hgmm_100_S1_L001_I1_001.fastq --i /home/FASTR_testing/fastqs --r /home/FASTR_testing/test_run_pooled
 ```
-Running FASTR with `--ig True` assumes that all reads are from the same sample and ignores any sample index. The summary log indicates that 88.52% of aligned reads were selected. This means that reads with the same cell and UMI barcodes but diferrent sample indeces aligned to the same positions. In this case, it appears safe to pool reads from different sample indeces. Conversely, if ~20% of aligned reads were selected, then it would be counterproductive to pool the reads.
+The new outputs consists of 109 cells. Running FASTR with `--ig True` assumes that all reads are from the same sample and ignores any sample index. The summary log indicates that 88.52% of aligned reads were selected. This means that reads with the same cell and UMI barcodes but diferrent sample indeces aligned to the same positions. In this case, it appears safe to pool reads from different sample indeces. Conversely, if ~20% of aligned reads were selected, then it would be counterproductive to pool the reads.
+
+It may seem odd that only 61.51% of reads are aligned to the reference. However, this sample data is a mix of mouse and human cells, and this tutorial only aligned to a human reference genome. FASTR currently only aligns to one genome for each run. FASTR still identified ~100 cells instead of ~50 due to substantial similarities between the mouse and human genomes, although fewer reads are expected in cells of mouse origin.
 
 
 
