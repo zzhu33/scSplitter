@@ -4,7 +4,7 @@
 FASTR (**F**astq **A**lignment-based **S**or**T**ing of sc**R**NA seq reads) is a preprocessing tool designed to convert scRNA seq results into a format compatible with analysis tools designed for general high-throughput sequencing data such as DNA seq. The main advantage of scRNA seq is that it allows researchers to sequence individual cells, whereas more traditional techniques sequence the aggregate genetic material from a population of cells. However, this means that scRNA seq results contain a mix of reads from perhaps thousands of diffrent cells. FASTR seperates sequecing reads from scRNAseq by their cell of origin and performs a preliminary filter using bowtie2 alignment, producing high-quality inputs that is compatible with existing custom analysis tools.
 ## Getting started
 ### Installation
-FASTR is written in python can be installed from its [GitHub page](https://github.com/zzhu33/test). Simply download "FASTR.zip" and extract to preferred location.
+FASTR is written in python can be installed from its [GitHub page](https://github.com/zzhu33/test/blob/master/FASTR.zip). 
 #### System requirements
 FASTR requires a linux x86-64 operating system (tested on RHEL 6, kernel 3.10.0-693).
 
