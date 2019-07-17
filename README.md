@@ -66,7 +66,13 @@ Results will be written to `/home/FASTR_testing/test_run` along with intermediat
 
 ![example output](output_fastq.PNG)
 
-Note that there are four directories in the output, each with a different sample index, but all four contain close to 100 nearly identical cells. Running FASTR with `--ig True` to ignore sample indeces, the summary log indicates that 88.52% of aligned reads were selected. This means that reads with the same cell and UMI barcodes but diferrent sample indeces aligned to the same positions, suggesting that these reads can be pooled using `--ig True`.
+Note that there are four directories in the output, each with a different sample index and contains close to 100 cells. However, the [summary](http://cf.10xgenomics.com/samples/cell-exp/1.2.0/hgmm_100/hgmm_100_web_summary.html) provided by 10x Genomics indicates that there should be only ~100 valid cells present in the data.
+
+A closer examination of the results would reveal that results from each sample appear to have nearly identical sets of cell barcodes. In this case, it can be useful to use the `--ig` option to check if the different sample indeces are truly what they seem:
+```
+$home/<name> python3 FASTR.py --ig True --cc 1000 --sc 100000 --n hgmm_100_S1_L001_I1_001.fastq --i /home/FASTR_testing/fastqs --r /home/FASTR_testing/test_run_pooled
+```
+Running FASTR with `--ig True` assumes that all reads are from the same sample and ignores any sample index. The summary log indicates that 88.52% of aligned reads were selected. This means that reads with the same cell and UMI barcodes but diferrent sample indeces aligned to the same positions. In this case, it appears safe to pool reads from different sample indeces. Conversely, if ~20% of aligned reads were selected, then it would be counterproductive to pool the reads.
 
 
 
