@@ -46,10 +46,10 @@ Usage:
 python3 FASTR.py [options]* --n <input_name> --i <input_directory> --r <output_directory> --ind <bowtie2_index>
 ```
 notes: 
-  -syntax is not strictly enforced and inputs can be in any order that is suitable to the user.
-  -the syntax for `--ind <bowtie2_index>` needs to match the Bowtie2 `-x` command; `<bowtie2_index>` is not the full filename of the bowtie index
-    -incorrect: `--ind /home/bowtie2_inds/example/example_index.1.bt2`
-    -correct: `--ind /home/bowtie2_inds/example/example_index`
+  - syntax is not strictly enforced and inputs can be in any order that is suitable to the user.
+  - the syntax for `--ind <bowtie2_index>` needs to match the Bowtie2 `-x` command; `<bowtie2_index>` is not the full filename of the bowtie index
+    - incorrect: `--ind /home/bowtie2_inds/example/example_index.1.bt2`
+    - correct: `--ind /home/bowtie2_inds/example/example_index`
 
 **Example run:**
 
@@ -60,5 +60,13 @@ $home/<name> python3 FASTR.py --cc 1000 --sc 100000 --n hgmm_100_S1_L001_I1_001.
 
 If the Bowtie2 index was not placed in the default location, add `--ind <path>/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index` to the run command. User can also edit the `bowtie2indexdir` option in `config.ini`.
 ### Results
-Results will be written to `/home/FASTR_testing/test_run` along with intermediate files and summary log. However, all intermediate files except sorted sams will be deleted. If the output directory does not exist, it will be automatically created.  The results will be in `/home/FASTR_testing/test_run/results`. By default, the results are compressed fastq files. There will be directories corresponding to each sample index that met the sample index read cuttoff (10000 reads, `--sc 10000`), and numerous fastqs inside each directory, one for each cell barcode that met the specified cuttoff (1000 reads, `--cc 1000`).
-A log ,`summary.txt`, is also provided, which includes run parameters and run times, as well as other information about the run. 
+Results will be written to `/home/FASTR_testing/test_run` along with intermediate files and summary log. However, all intermediate files except sorted sams will be deleted. If the output directory does not exist, it will be automatically created.  The results will be in `/home/FASTR_testing/test_run/results`. By default, the results are compressed fastq files. There will be directories corresponding to each sample index that met the sample index read cuttoff, and numerous fastqs inside each directory, one for each cell barcode that met the specified cuttoff (Fig.2). A log ,`summary.txt`, is also provided, which includes run parameters and run times, as well as other information about the run. 
+
+**Fig.2** Output fastq files
+
+![example output](output_fastq.PNG)
+
+Note that there are four directories in the output, each with a different sample index, but all four contain close to 100 nearly identical cells. Running FASTR with `--ig True` to ignore sample indeces, the summary log indicates that 88.52% of aligned reads were selected. This means that reads with the same cell and UMI barcodes but diferrent sample indeces aligned to the same positions, suggesting that these reads can be pooled using `--ig True`.
+
+
+
