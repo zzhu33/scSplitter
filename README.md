@@ -1,12 +1,12 @@
 ![logo](QBRC.jpg)
 # FASTR
 ## Introduction
-FASTR (**F**astq **A**lignment-based **S**or**T**ing of sc**R**NA Seq reads) is a preprocessing tool designed to convert scRNA seq results into a format compatible with analysis tools designed for general high-throughput sequencing data such as DNA seq. The main advantage of scRNA seq is that it allows researchers to sequence individual cells, whereas more traditional techniques sequence the aggregate genetic material from a population of cells. However, this means that scRNA seq results contain a mix of reads from perhaps thousands of diffrent cells. <name> seperates sequecing reads from scRNAseq by their cell of origin and performs a preliminary filter using bowtie2 alignment, producing high-quality inputs that is compatible with existing custom analysis tools.
+FASTR (**F**astq **A**lignment-based **S**or**T**ing of sc**R**NA seq reads) is a preprocessing tool designed to convert scRNA seq results into a format compatible with analysis tools designed for general high-throughput sequencing data such as DNA seq. The main advantage of scRNA seq is that it allows researchers to sequence individual cells, whereas more traditional techniques sequence the aggregate genetic material from a population of cells. However, this means that scRNA seq results contain a mix of reads from perhaps thousands of diffrent cells. <name> seperates sequecing reads from scRNAseq by their cell of origin and performs a preliminary filter using bowtie2 alignment, producing high-quality inputs that is compatible with existing custom analysis tools.
 ## Getting started
 ### Installation
-<name> is written in python can be installed from its [GitHub page](https://github.com/zzhu33/test).
+FASTR is written in python can be installed from its [GitHub page](https://github.com/zzhu33/test).
 #### System requirements
-<name> requires a linux x86-64 operating system (tested on RHEL 6, kernel 3.10.0-693).
+FASTR requires a linux x86-64 operating system (tested on RHEL 6, kernel 3.10.0-693).
 
 Hardware requirements are dependent on CPU and input size:
   - free drive space: 30x the size of compressed input fastqs, or 3x the size of uncompressed fastqs.
@@ -33,11 +33,17 @@ The example inputs are [sample fastqs](http://cf.10xgenomics.com/samples/cell-ex
 
 ![example_fastq](input_fastq.PNG)
 
-The example reference index is the [human GRCh38](ftp://ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index.tar.gz) provided by [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml). Please refer to the Bowtie2 [manual](http://bowtie-bio.sourceforge.net/bowtie2/manual.shtml) for its installation instructions, if needed. This is the default Bowtie2 reference index and should be placed in `<name>/bowtie2`, as shown in the installation instructions. However, any index from any accessible directory can be used.
-### Running <name>
+Note that the input filnames need to follow the folowing convention: 
+```
+<sample_name>_S1_L00<lane_number>_<read_type>_001.fastq.gz`
+```
+where `<read_type>` is R1, R2, or I1.
+
+The example reference index is the [human GRCh38](ftp://ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index.tar.gz) index provided by [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml). Please refer to the Bowtie2 [manual](http://bowtie-bio.sourceforge.net/bowtie2/manual.shtml) for its installation instructions, if needed. This is the default Bowtie2 reference index and should be placed in `<name>/bowtie2`, as shown in the installation instructions. However, any index from any accessible directory can be used.
+### Running FASTR
 Usage:
 ```
-python3 <name>.py [options]* --n <input_name> --i <input_directory> --r <output_directory> --ind <bowtie2_index>
+python3 FASTR.py [options]* --n <input_name> --i <input_directory> --r <output_directory> --ind <bowtie2_index>
 ```
 notes: 
   -syntax is not strictly enforced and inputs can be in any order that is suitable to the user.
@@ -47,17 +53,12 @@ notes:
 
 **Example run:**
 
-install numpy and pandas if needed:
+command:
 ```
-pip install numpy
-pip install pandas
-```
-run <name>:
-```
-$home/<name> python3 <name>.py --cc 1000 --sc 10000 --n hgmm_100_S1_L001_I1_001.fastq --i /home/<name>_testing/fastqs --r /home/<name>_testing/test_run 
+$home/<name> python3 FASTR.py --cc 1000 --sc 100000 --n hgmm_100_S1_L001_I1_001.fastq --i /home/FASTR_testing/fastqs --r /home/FASTR_testing/test_run 
 ```
 
-If Bowtie2 index was not placed in the default location, add `--ind <path>/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index` to the run command.
+If the Bowtie2 index was not placed in the default location, add `--ind <path>/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index` to the run command. User can also edit the `bowtie2indexdir` option in `config.ini`.
 ### Results
-Results will be written to `/home/<name>_testing/test_run` along with intermediate files and summary log. However, all intermediate files except sorted sams will be deleted. If the output directory does not exist, it will be automatically created.  The results will be in `/home/<name>_testing/test_run/results`. By default, the results are compressed fastq files. There will be directories corresponding to each sample index that met the sample index read cuttoff (10000 reads, `--sc 10000`), and numerous fastqs inside each directory, one for each cell barcode that met the specified cuttoff (1000 reads, `--cc 1000`).
+Results will be written to `/home/FASTR_testing/test_run` along with intermediate files and summary log. However, all intermediate files except sorted sams will be deleted. If the output directory does not exist, it will be automatically created.  The results will be in `/home/FASTR_testing/test_run/results`. By default, the results are compressed fastq files. There will be directories corresponding to each sample index that met the sample index read cuttoff (10000 reads, `--sc 10000`), and numerous fastqs inside each directory, one for each cell barcode that met the specified cuttoff (1000 reads, `--cc 1000`).
 A log ,`summary.txt`, is also provided, which includes run parameters and run times, as well as other information about the run. 
