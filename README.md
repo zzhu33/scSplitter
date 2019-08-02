@@ -11,9 +11,9 @@ FASTR requires a linux x86-64 operating system (tested on RHEL 6, kernel 3.10.0-
 Hardware requirements are dependent on CPU and input size:
   - free drive space: 30x the size of compressed input fastqs, or 3x the size of uncompressed fastqs.
   - CPU: no minimum requirement, but >16 core system with single core performance comparable or better than Intel e5-2680 is   recommended.
-  - memory: >500 MB per logical processor, 1 GB per logical processor recommended.
+  - memory: same as STAR (31 GB + 150 MB per logical processor for human genome index hg38) 64GB recommended.
 ### Dependencies
-[bowtie2 2.3.2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) or later
+[STAR](https://github.com/alexdobin/STAR) (tested using version 2.6.1b)
 
 python 3.6.4 or 3.7.4
   
@@ -22,7 +22,7 @@ python 3.6.4 or 3.7.4
 numpy, pandas
 
 
-It is recommended to dowload and extract the [human GRCh38](ftp://ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index.tar.gz) Bowtie2 reference index to `FASTR/bowtie2_index/GRCh38`. This is the default reference index for alignment. Users can also specify any reference index explicitly with `--ind` using Bowtie2 syntax. Ex: `--ind /home/bowtie_inds/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index`. Alternatively, users can also edit `bowtie2indexdir` and `bowtie2indexname` to change FASTR's default index.
+A STAR reference index is required. It can be created using STAR
 
 ## Tutorial
 This tutorial will guide the user in processing a sample scRNA seq result from 10x Genomic. 
