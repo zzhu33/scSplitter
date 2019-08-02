@@ -1,17 +1,17 @@
 ![logo](QBRC.jpg)
 # FASTR
 ## Introduction
-FASTR (**F**astq **A**lignment-based **S**or**T**ing of sc**R**NA seq reads) is a preprocessing tool designed to convert scRNA seq results into a format compatible with analysis tools designed for general high-throughput sequencing data such as DNA seq. The main advantage of scRNA seq is that it allows researchers to sequence individual cells, whereas more traditional techniques sequence the aggregate genetic material from a population of cells. However, this means that scRNA seq results contain a mix of reads from perhaps thousands of diffrent cells. FASTR seperates sequecing reads from scRNAseq by their cell of origin and performs a preliminary filter using bowtie2 alignment, producing high-quality inputs that is compatible with existing custom analysis tools.
+FASTR (**F**astq **A**lignment-based **S**or**T**ing of sc**R**NA seq reads) is a preprocessing tool designed to convert scRNA seq results into a format suitable for mutation or SNV calling at the single cell level for the purpose of lineage tracing. The output is incidentally suitable for use with general high-throughput sequencing analysis tools to examine the transcriptome of each individual cell. The main advantage of scRNA seq is that it allows researchers to sequence individual cells, whereas more traditional techniques sequence the aggregate genetic material from a population of cells. However, this means that scRNA seq results contain a mix of reads from perhaps thousands of diffrent cells. FASTR seperates sequecing reads from scRNAseq by their cell of origin and performs preliminary QC using STAR alignment, producing high-quality inputs for finding rare mutations in individual cells.
 ## Getting started
 ### Installation
 FASTR is written in python can be installed from its [GitHub page](https://github.com/zzhu33/test/blob/master/FASTR.zip). 
 #### System requirements
-FASTR requires a linux x86-64 operating system (tested on RHEL 6, kernel 3.10.0-693).
+FASTR requires a linux x86-64 operating system with basic utilities (split and gzip; tested on RHEL 6, kernel 3.10.0-693).
 
-Hardware requirements are dependent on CPU and input size:
+Hardware requirements are dependent on reference genome, CPU, and input size:
   - free drive space: 30x the size of compressed input fastqs, or 3x the size of uncompressed fastqs.
   - CPU: no minimum requirement, but >16 core system with single core performance comparable or better than Intel e5-2680 is   recommended.
-  - memory: same as STAR (31 GB + 150 MB per logical processor for human genome index hg38) 64GB recommended.
+  - memory: same as STAR (31 GB + 150 MB per logical processor for human genome index hg38) 64 GB recommended.
 ### Dependencies
 [STAR](https://github.com/alexdobin/STAR) (tested using version 2.6.1b)
 
@@ -22,7 +22,7 @@ python 3.6.4 or 3.7.4
 numpy, pandas
 
 
-A STAR reference index is required. It can be created using STAR
+A STAR reference index is required. Refer to the [STAR manual](https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf) for instructions on generating a genome index.
 
 ## Tutorial
 This tutorial will guide the user in processing a sample scRNA seq result from 10x Genomic. 
@@ -33,35 +33,37 @@ The example inputs are [sample fastqs](http://cf.10xgenomics.com/samples/cell-ex
 
 ![example_fastq](input_fastq.PNG)
 
-Note that the input filenames need to follow the folowing convention: 
+Note that since FASTR is desinged to be easily integrated into other pipelines, filenames of inputs need to be stored in a tab-delimited text file, the included file is `exampleInputNames.txt`. The format of the input file is as follows:
 ```
-<sample_name>_S1_L00<lane_number>_<read_type>_001.fastq.gz`
+lane1_r1.fastq  lane1_r2.fastq  lane1_I1.fastq
+lane2_r1.fastq  lane2_r2.fastq  lane2_I1.fastq
+...
 ```
-where `<read_type>` is R1, R2, or I1.
 
-The example reference index is the [human GRCh38](ftp://ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index.tar.gz) index provided by [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml). Please refer to the Bowtie2 [manual](http://bowtie-bio.sourceforge.net/bowtie2/manual.shtml) for its installation instructions, if needed. This is the default Bowtie2 reference index and should be placed in `FASTR/bowtie2_index/GRCh38`, as shown in the installation instructions. 
+The example reference genome is the [human GRCh38](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.26/) index. Users can use the following STAR command to generate the index. Refer to the [STAR manual](https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf) for details.
+```
+STAR --runThreadN <logical cores> --runMode genomeGenerate --genomeDir <output path> --genomeFastaFiles <input fasta paths> --sjdbGTFfile <annotation files path> -- sjdbOverhang <readLength - 1>
+```
+In the example, the index is placed in `/home/STAR_indices/hg38/STAR`, other reference genomes such as mm10 can also be used.
 ### Running FASTR
 Usage:
 ```
-python3 FASTR.py [options]* --n <input_name> --i <input_directory> --r <output_directory> --ind <bowtie2_index>
+python3 FASTR.py [options]* --f <input_file> --i <input_directory> --r <output_directory> --ind <STAR_index_directory_path>
 ```
 notes: 
   - syntax is not strictly enforced and inputs can be in any order that is suitable to the user.
-  - the syntax for `--ind <bowtie2_index>` needs to match the Bowtie2 `-x` command; `<bowtie2_index>` is not the full filename of the bowtie index
-    - incorrect: `--ind /home/bowtie2_inds/example/example_index.1.bt2`
-    - correct: `--ind /home/bowtie2_inds/example/example_index`
 
 **Example run:**
 
 command:
 ```
-$home/<name> python3 FASTR.py --cc 1000 --sc 100000 --n hgmm_100_S1_L001_I1_001.fastq --i /home/FASTR_testing/fastqs --r /home/FASTR_testing/test_run 
+$home/<name> python3 FASTR.py --cc 1000 --sc 100000 --f exampleInputNames.txt --i /home/FASTR_testing/fastqs --r /home/FASTR_testing/test_run --ind /home/STAR_indices/hg38/STAR
 ```
 
-If the Bowtie2 index was not placed in the default location, add `--ind <path>/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index` to the run command. User can also edit the `bowtie2indexdir` option in `config.ini`.
 ### Results
-Results will be written to `/home/FASTR_testing/test_run` along with intermediate files and summary log. However, all intermediate files except sorted sams will be deleted. If the output directory does not exist, it will be automatically created.  The results will be in `/home/FASTR_testing/test_run/results`. By default, the results are compressed fastq files. There will be directories corresponding to each sample index that met the sample index read cuttoff, and numerous fastqs inside each directory, one for each cell barcode that met the specified cuttoff (Fig.2). A log ,`summary.txt`, is also provided, which includes run parameters and run times, as well as other information about the run. 
+Results will be written to `/home/FASTR_testing/test_run` along with intermediate files and summary log. However, all intermediate files will be deleted. If the output directory does not exist, it will be automatically created.  The results will be in `/home/FASTR_testing/test_run/results`. By default, the results are compressed fastq files. There will be directories corresponding to each sample index that met the sample index read cuttoff, and numerous fastqs inside each directory, one for each cell barcode that met the specified cuttoff (Fig.2). A log ,`summary.txt`, is also provided, which includes run parameters and run times, as well as other information about the run. 
 
+Note that 10x Genomics include four different sample indices in runs with only one sample. Here, each of the four sample indeces are treated as a seperate sample. Users can add `--ig True` option to the command or omit the I1 read filenames in the input file to 
 **Fig.2** Output fastq files
 
 ![example output](output_fastq.PNG)
