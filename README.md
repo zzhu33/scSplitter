@@ -59,6 +59,7 @@ command:
 ```
 $home/<name> python3 FASTR.py --ig True --f exampleInputNames.txt --i /home/FASTR_testing/fastqs --r /home/FASTR_testing/test_run --ind /home/STAR_indices/hg38/STAR
 ```
+The example run should take 4-10 minutes, depending on system hardware.
 
 ### Results
 Results will be written to `/home/FASTR_testing/test_run` along with intermediate files and summary log. However, all intermediate files will be deleted to save space. If the output directory does not exist, it will be automatically created. By default, the results are compressed fastq files. There will be directories corresponding to each sample index that met the sample index read cuttoff, and numerous fastqs inside each directory, one for each cell barcode that met the specified cuttoff (Fig.2). A log, `summary.txt`, is also provided, which includes run parameters and run times, as well as other information about the run. 
