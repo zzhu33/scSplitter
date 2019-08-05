@@ -11,7 +11,7 @@ FASTR requires a linux x86-64 operating system with basic utilities (split and g
 Hardware requirements are dependent on reference genome, CPU, and input size:
   - free drive space: 30x the size of compressed input fastqs, or 3x the size of uncompressed fastqs.
   - CPU: no minimum requirement, but >16 core system with single core performance comparable or better than Intel e5-2680 is   recommended.
-  - memory: same as STAR (31 GB + 150 MB per logical processor for human genome index hg38) 64 GB recommended.
+  - memory: same as STAR (31 GB + 150 MB per logical processor for human genome index hg38); 64 GB recommended.
 ### Dependencies
 [STAR](https://github.com/alexdobin/STAR) (tested using version 2.6.1b)
 
@@ -57,7 +57,7 @@ notes:
 
 command:
 ```
-$home/<name> python3 FASTR.py --cc 1000 --sc 100000 --ig True --f exampleInputNames.txt --i /home/FASTR_testing/fastqs --r /home/FASTR_testing/test_run --ind /home/STAR_indices/hg38/STAR
+$home/<name> python3 FASTR.py --ig True --f exampleInputNames.txt --i /home/FASTR_testing/fastqs --r /home/FASTR_testing/test_run --ind /home/STAR_indices/hg38/STAR
 ```
 
 ### Results
@@ -67,7 +67,7 @@ Results will be written to `/home/FASTR_testing/test_run` along with intermediat
 
 ![example output pooled](output_fastq_pooled.PNG)
 
-The results are a number of fastq files in the `/results` directory, each one representing reads from one cell (Fig.2). The results are compressed by default and `--gz False` can be used to obtain uncompressed results with a small performance gain. Note that `--ig True` is used to force FASTR to consider all reads to be from the same sample. Otherwise, there would be four subdirectories in the output `/results` directory (Fig.3, left), each with a different sample index and contains close to 100 cells (Fig.3, right). The explanation is that 10x Genomics includes four different oligos for sample index reads in runs with only one sample, therefore there are only 100 valid cells present (see 10x's [summary](http://cf.10xgenomics.com/samples/cell-exp/1.2.0/hgmm_100/hgmm_100_web_summary.html)). 
+The results are a number of fastq files in the `/results` directory, each one representing reads from one cell (Fig.2). The results are compressed by default and `--gz False` can be used to obtain uncompressed results with a small performance gain. Note that `--ig True` is used to force FASTR to consider all reads to be from the same sample. Alternatively, the user can simply omit the I1 read names from the `exampleInputFilenames.txt` input file. This option is especially useful in cases where I1 reads are not provided. Otherwise, FASTR will create four subdirectories in the output `/results` directory (Fig.3, left), each with a different sample index and contains close to 100 cells (Fig.3, right). The explanation is that 10x Genomics always includes [four different oligos for sample index reads](https://kb.10xgenomics.com/hc/en-us/articles/218168503-What-oligos-are-in-my-sample-index-) in runs with only one sample, therefore there are only 100 valid cells present (see 10x's [summary](http://cf.10xgenomics.com/samples/cell-exp/1.2.0/hgmm_100/hgmm_100_web_summary.html)). 
 
 **Fig.3** Output fastq files if not using `--ig True`
 
