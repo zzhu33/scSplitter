@@ -65,9 +65,9 @@ Results will be written to `/home/FASTR_testing/test_run` along with intermediat
 
 **Fig.2** Output fastq files
 
-![example output](output_fastq.PNG)
+![example output pooled](output_fastq_pooled.PNG)
 
-The results are a number of fastq files in the `/results` directory, each one representing reads from one cell. Note that `--ig True` is used to force FASTR to consider all reads to be from the same sample. Otherwise, there would be four subdirectories in the output `/results` directory (Fig.3, left), each with a different sample index and contains close to 100 cells (Fig.3, right). The explanation is that 10x Genomics includes four different oligos for sample index reads in runs with only one sample, therefore there are only 100 valid cells present (see 10x's [summary](http://cf.10xgenomics.com/samples/cell-exp/1.2.0/hgmm_100/hgmm_100_web_summary.html)). 
+The results are a number of fastq files in the `/results` directory, each one representing reads from one cell (Fig.2). The results are compressed by default and `--gz False` can be used to obtain uncompressed results with a small performance gain. Note that `--ig True` is used to force FASTR to consider all reads to be from the same sample. Otherwise, there would be four subdirectories in the output `/results` directory (Fig.3, left), each with a different sample index and contains close to 100 cells (Fig.3, right). The explanation is that 10x Genomics includes four different oligos for sample index reads in runs with only one sample, therefore there are only 100 valid cells present (see 10x's [summary](http://cf.10xgenomics.com/samples/cell-exp/1.2.0/hgmm_100/hgmm_100_web_summary.html)). 
 
 **Fig.3** Output fastq files if not using `--ig True`
 
