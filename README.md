@@ -57,7 +57,7 @@ notes:
 
 command:
 ```
-$home/<name> python3 FASTR.py --ig True --f exampleInputNames.txt --i /home/FASTR_testing/fastqs --r /home/FASTR_testing/test_run --ind /home/STAR_indices/hg38/STAR
+$home/FASTR python3 FASTR.py --ig True --f exampleInputNames.txt --i /home/FASTR_testing/fastqs --r /home/FASTR_testing/test_run --ind /home/STAR_indices/hg38/STAR
 ```
 The example run should take 4-10 minutes, depending on system hardware.
 
