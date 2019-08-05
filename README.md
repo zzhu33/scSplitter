@@ -33,7 +33,7 @@ The example inputs are [sample fastqs](http://cf.10xgenomics.com/samples/cell-ex
 
 ![example_fastq](input_fastq.PNG)
 
-Note that since FASTR is desinged to be easily integrated into other pipelines, filenames of inputs need to be stored in a tab-delimited text file, the included file is `exampleInputNames.txt`. The format of the input file is as follows:
+Note that since FASTR is desinged to be easily integrated into other pipelines, filenames of inputs need to be stored in a tab-delimited text file, the included [input file](https://github.com/zzhu33/test_7-2019/blob/master/exampleInputNames.txt) is `exampleInputNames.txt`. The format of the input file is as follows:
 ```
 lane1_r1.fastq  lane1_r2.fastq  lane1_I1.fastq
 lane2_r1.fastq  lane2_r2.fastq  lane2_I1.fastq
