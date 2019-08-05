@@ -57,7 +57,7 @@ notes:
 
 command:
 ```
-$home/<name> python3 FASTR.py --cc 1000 --sc 100000 --f exampleInputNames.txt --i /home/FASTR_testing/fastqs --r /home/FASTR_testing/test_run --ind /home/STAR_indices/hg38/STAR
+$home/<name> python3 FASTR.py --cc 1000 --sc 100000 --ig True --f exampleInputNames.txt --i /home/FASTR_testing/fastqs --r /home/FASTR_testing/test_run --ind /home/STAR_indices/hg38/STAR
 ```
 
 ### Results
@@ -67,14 +67,15 @@ Results will be written to `/home/FASTR_testing/test_run` along with intermediat
 
 ![example output](output_fastq.PNG)
 
-Note that there are four directories in the output `/results` directory (Fig.2, left), each with a different sample index and contains close to 100 cells (Fig.2, right). However, 10x Genomics include four different sample indices in runs with only one sample, therefore there are only 100 valid cells present (see 10x's [summary](http://cf.10xgenomics.com/samples/cell-exp/1.2.0/hgmm_100/hgmm_100_web_summary.html)). Users can add `--ig True` option to the command or omit the I1 read filenames in the input file to force FASTR to consider all reads to be from the same sample. The output files will be fastq files corresponding to each cell placed directly in the `/results` directory. 
+The results are a number of fastq files in the `/results` directory, each one representing reads from one cell. Note that `--ig True` is used to force FASTR to consider all reads to be from the same sample. Otherwise, there would be four subdirectories in the output `/results` directory (Fig.3, left), each with a different sample index and contains close to 100 cells (Fig.3, right). The explanation is that 10x Genomics includes four different oligos for sample index reads in runs with only one sample, therefore there are only 100 valid cells present (see 10x's [summary](http://cf.10xgenomics.com/samples/cell-exp/1.2.0/hgmm_100/hgmm_100_web_summary.html)). 
 
-```
-$home/<name> python3 FASTR.py --ig True --cc 1000 --sc 100000 --n hgmm_100_S1_L001_I1_001.fastq --i /home/FASTR_testing/fastqs --r /home/FASTR_testing/test_run_pooled
-```
-The new outputs consists of 109 cells. Running FASTR with `--ig True` causes it to ignore any sample index. The summary log indicates that 88.52% of aligned reads were selected. This means that reads with the same cell and UMI barcodes but diferrent sample indeces largely aligned to the same positions. In this case, it appears safe to pool reads from different sample indices. Conversely, if only a small fraction of aligned reads were selected, it may be a sign that multiple samples are present and the sample index should not be ignored. For runs containing multiple samples, I1 reads must be provided and the `--ig` option must be left at the default `True` value to demultiplex the different samples.
+**Fig.3** Output fastq files if not using `--ig True`
 
-It may seem odd that only 61.51% of reads are aligned to the reference. However, this sample data is a mix of mouse and human cells, and this tutorial only aligned to a human reference genome. When using the mouse mm10 reference index, 44.17% of reads successfully align. Note that there is overlap due to substantial similarities between the mouse and human genomes. FASTR currently only aligns to one genome for each run. FASTR still identified ~100 cells instead of ~50 due to genomes similarities, although fewer reads are expected in cells of mouse origin. The converse is true when aligning using the mouse mm10 reference index.
+![example output](output_fastq.PNG)
+
+The summary log indicates that 82.31% of aligned reads were selected. This means that reads with the same cell and UMI barcodes but diferrent sample indeces largely aligned to the same positions. In this case, it appears safe to pool reads from different sample indices. Conversely, if only a small fraction of aligned reads were selected, it may be a sign that multiple samples are present and the sample index should not be ignored. For runs containing multiple samples, I1 reads must be provided and the `--ig` option must be left at the default `True` value to demultiplex the different samples.
+
+It may seem odd that only 67.77% of reads passed QC. However, this sample data is a mix of mouse and human cells, and this tutorial only aligned to a human reference genome. When using the mouse mm10 reference index, 68.92% of the reads pass QC. Note that there is overlap due to substantial similarities between the mouse and human genomes. FASTR currently only aligns to one genome for each run. 
 
 
 
