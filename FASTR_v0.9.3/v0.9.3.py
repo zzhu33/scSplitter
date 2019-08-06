@@ -34,8 +34,8 @@ def main():
                         help='path of the STAR reference index')
     parser.add_argument('--chver', type=int, default=2,
                         help='10x chemistry version; options: 1 (v1 chemistry paired), 2 (v2 chemistry); default: 2')
-    parser.add_argument('--qc', type=str, default='strict',
-                        help='read QC mode for v1 chemistry paired reads; default: strict')
+    parser.add_argument('--qc', type=str, default='lenient',
+                        help='read QC mode for v1 chemistry paired reads; options:"lenient," "strict"; default: "lenient"')
     parser.add_argument('--cb', type=int, default=16,
                         help='length of cell barcode; default = 16 bp')
     parser.add_argument('--sl', type=int, default=8,
