@@ -4,11 +4,11 @@
 FASTR (**F**astq **A**lignment-based **S**or**T**ing of sc**R**NA seq reads) is a preprocessing tool designed to convert scRNA seq results into a format suitable for mutation or SNV calling at the single cell level for the purpose of lineage tracing. The output is incidentally suitable for use with general high-throughput sequencing analysis tools to examine the transcriptome of each individual cell. The main advantage of scRNA seq is that it allows researchers to sequence individual cells, whereas more traditional techniques sequence the aggregate genetic material from a population of cells. However, this means that scRNA seq results contain a mix of reads from perhaps thousands of diffrent cells. FASTR seperates sequecing reads from scRNAseq by their cell of origin and performs preliminary QC using STAR alignment, producing high-quality inputs for finding rare mutations in individual cells.
 ## Getting started
 ### Installation
-FASTR is written in python can be installed from its [GitHub page](https://github.com/zzhu33/FASTR/blob/master/FASTR_v0.9.1.zip). 
+FASTR is written in python can be installed from [GitHub](https://github.com/zzhu33/FASTR/blob/master/FASTR_v0.9.1.zip). 
 #### System requirements
 FASTR requires a linux x86-64 operating system with basic utilities (split and gzip; tested on RHEL 6, kernel 3.10.0-693).
 
-Hardware requirements are dependent on reference genome, CPU, and input size:
+Hardware requirements are dependent on reference genome size, CPU, and input size:
   - free drive space: 30x the size of compressed input fastqs, or 3x the size of uncompressed fastqs.
   - CPU: no minimum requirement, but >16 core system with single core performance comparable or better than Intel e5-2680 is   recommended.
   - memory: same as STAR (31 GB + 150 MB per logical processor for human genome index hg38); 64 GB recommended.
@@ -35,12 +35,12 @@ The example inputs are [sample fastqs](http://cf.10xgenomics.com/samples/cell-ex
 
 Note that since FASTR is desinged to be easily integrated into other pipelines, filenames of inputs need to be stored in a tab-delimited text file, the included [input file](https://github.com/zzhu33/FASTR/blob/master/exampleInputNames.txt) is `exampleInputNames.txt`. The format of the input file is as follows:
 ```
-lane1_r1.fastq  lane1_r2.fastq  lane1_I1.fastq
-lane2_r1.fastq  lane2_r2.fastq  lane2_I1.fastq
+lane1_read1.fastq  lane1_read2.fastq  lane1_indexRead1.fastq
+lane2_read1.fastq  lane2_read2.fastq  lane2_indexRead1.fastq
 ...
 ```
 
-The example reference genome is the [human GRCh38](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.26/) index. Users can use the following STAR command to generate the index. Refer to the [STAR manual](https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf) for details.
+The example reference genome is the [human GRCh38](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.26/) index. Users can use the following STAR command to generate the index. Refer to the [STAR manual](https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf) for more details.
 ```
 STAR --runThreadN <logical cores> --runMode genomeGenerate --genomeDir <output path> --genomeFastaFiles <input fasta paths> --sjdbGTFfile <annotation files path> -- sjdbOverhang <readLength - 1>
 ```
@@ -62,13 +62,13 @@ $home/FASTR python3 FASTR.py --ig True --f exampleInputNames.txt --i /home/FASTR
 The example run should take 4-10 minutes, depending on system hardware.
 
 ### Results
-Results will be written to `/home/FASTR_testing/test_run` along with intermediate files and summary log. However, all intermediate files will be deleted to save space. If the output directory does not exist, it will be automatically created. By default, the results are compressed fastq files. There will be directories corresponding to each sample index that met the sample index read cuttoff, and numerous fastqs inside each directory, one for each cell barcode that met the specified cuttoff (Fig.2). A log, `summary.txt`, is also provided, which includes run parameters and run times, as well as other information about the run. 
+Results will be written to `/home/FASTR_testing/test_run/results` along with intermediate files. However, all intermediate files will be deleted to save space. Therefore, although FASTR may require a large amount of free disk space in order to store these temporary files, the final results are almost invariably smaller than the input. If the output directory does not exist, it will be automatically created. A log, `summary.txt`, is also provided, which includes run parameters and run times, as well as other information about the run. 
 
 **Fig.2** Output fastq files
 
 ![example output pooled](output_fastq_pooled.PNG)
 
-The results are a number of fastq files in the `/results` directory, each one representing reads from one cell (Fig.2). The results are compressed by default and `--gz False` can be used to obtain uncompressed results with a small performance gain. Note that `--ig True` is used to force FASTR to consider all reads to be from the same sample. Alternatively, the user can simply omit the I1 read names from the `exampleInputFilenames.txt` input file. This option is especially useful in cases where I1 reads are not provided. Otherwise, FASTR will create four subdirectories in the output `/results` directory (Fig.3, left), each with a different sample index and contains close to 100 cells (Fig.3, right). The explanation is that 10x Genomics always includes [four different oligos for sample index reads](https://kb.10xgenomics.com/hc/en-us/articles/218168503-What-oligos-are-in-my-sample-index-) in runs with only one sample, therefore there are only 100 valid cells present (see 10x's [summary](http://cf.10xgenomics.com/samples/cell-exp/1.2.0/hgmm_100/hgmm_100_web_summary.html)). 
+The output consists of a number of fastq files in the `/results` directory, each one representing reads from one cell (Fig.2). The results are compressed by default and `--gz False` can be used to obtain uncompressed results with a small performance gain. Note that `--ig True` is used to force FASTR to consider all reads to be from the same sample. Alternatively, the user can simply omit the I1 read names from the `exampleInputFilenames.txt` input file. This option is especially useful in cases where I1 reads are not available. Otherwise, for the example data, FASTR will create four subdirectories in the output `/results` directory (Fig.3, left), each with a different sample index and contains close to 100 cells (Fig.3, right). The explanation is that 10x Genomics always includes [four different oligos for sample index reads](https://kb.10xgenomics.com/hc/en-us/articles/218168503-What-oligos-are-in-my-sample-index-) in runs with only one sample, therefore there are only 100 valid cells present (see 10x's [summary](http://cf.10xgenomics.com/samples/cell-exp/1.2.0/hgmm_100/hgmm_100_web_summary.html)). 
 
 **Fig.3** Output fastq files if not using `--ig True`
 
