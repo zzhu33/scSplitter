@@ -4,7 +4,7 @@
 FASTR (**F**astq **A**lignment-based **S**or**T**ing of sc**R**NA seq reads) is a preprocessing tool designed to convert scRNA seq results into a format suitable for mutation or SNV calling at the single cell level for the purpose of lineage tracing. The output is incidentally suitable for use with general high-throughput sequencing analysis tools to examine the transcriptome of each individual cell. The main advantage of scRNA seq is that it allows researchers to sequence individual cells, whereas more traditional techniques sequence the aggregate genetic material from a population of cells. However, this means that scRNA seq results contain a mix of reads from perhaps thousands of diffrent cells. FASTR seperates sequecing reads from scRNAseq by their cell of origin and performs preliminary QC using STAR alignment, producing high-quality inputs for finding rare mutations in individual cells.
 ## Getting started
 ### Installation
-FASTR is written in python can be downloaded from [GitHub](https://github.com/zzhu33/FASTR/blob/master/FASTR_v0.9.1.zip). 
+FASTR is written in python can be downloaded from [GitHub](https://github.com/zzhu33/FASTR/blob/master/FASTR_v0.9.3.zip). 
 #### System requirements
 FASTR requires a linux x86-64 operating system with basic utilities (split and gzip; tested on RHEL 6, kernel 3.10.0-693).
 
@@ -33,7 +33,7 @@ The example inputs are [sample fastqs](http://cf.10xgenomics.com/samples/cell-ex
 
 ![example_fastq](input_fastq.PNG)
 
-Note that since FASTR is desinged to be easily integrated into other pipelines, filenames of inputs need to be stored in a tab-delimited text file, the included [input file](https://github.com/zzhu33/FASTR/blob/master/FASTR_v0.9.1/exampleInputNames.txt) is `exampleInputNames.txt`. The format of the input file is as follows:
+Note that since FASTR is desinged to be easily integrated into other pipelines, filenames of inputs need to be stored in a tab-delimited text file, the included [input file](https://github.com/zzhu33/FASTR/blob/master/FASTR_v0.9.3/exampleInputNames.txt) is `exampleInputNames.txt`. The format of the input file is as follows:
 ```
 lane1_read1.fastq  lane1_read2.fastq  lane1_indexRead1.fastq
 lane2_read1.fastq  lane2_read2.fastq  lane2_indexRead1.fastq
