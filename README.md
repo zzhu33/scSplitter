@@ -76,7 +76,7 @@ The output consists of a number of fastq files in the `/results` directory, each
 
 The summary log indicates that 82.31% of aligned reads were selected. This means that reads with the same cell and UMI barcodes but diferrent sample indeces largely aligned to the same positions. In this case, it appears safe to pool reads from different sample indices. Conversely, if only a small fraction of aligned reads were selected, it may be a sign that multiple samples are present and the sample index should not be ignored. For runs containing multiple samples, I1 reads must be provided and the `--ig` option must be left at the default `True` value to demultiplex the different samples.
 
-It may seem odd that only 67.77% of reads passed QC. However, this sample data is a mix of mouse and human cells, and this tutorial only aligned to a human reference genome. When using the mouse mm10 reference index, 68.92% of the reads pass QC. Note that there is overlap due to substantial similarities between the mouse and human genomes. FASTR currently only aligns to one genome for each run. 
+It may seem odd that only 58.48% of reads aligned successfully. However, this sample data is a mix of mouse and human cells, and this tutorial only aligned to a human reference genome. When using the mouse mm10 reference index, 44.37% of the reads aligned to the genome. Note that there is overlap due to similarities between the mouse and human genomes. FASTR currently only aligns to one genome for each run. 
 
 
 
