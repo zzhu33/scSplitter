@@ -57,7 +57,7 @@ notes:
 
 command:
 ```
-$home/FASTR python3 scSplitter.py --ig True --f exampleInputNames.txt --i /home/scSplitter_testing/fastqs --r /home/scSplitter_testing/test_run --ind /home/STAR_indices/hg38/STAR
+$home/scSplitter python3 scSplitter.py --ig True --f exampleInputNames.txt --i /home/scSplitter_testing/fastqs --r /home/scSplitter_testing/test_run --ind /home/STAR_indices/hg38/STAR
 ```
 The example run should take 4-10 minutes, depending on system hardware.
 
@@ -68,7 +68,7 @@ Results will be written to `/home/scSplitter_testing/test_run/results` along wit
 
 ![example output pooled](output_fastq_pooled.PNG)
 
-The output consists of a number of fastq files in the `/results` directory, each one representing reads from one cell (Fig.2). The results are compressed by default and `--gz False` can be used to obtain uncompressed results with a small performance gain. Note that `--ig True` is used to force FASTR to consider all reads to be from the same sample. Alternatively, the user can simply omit the I1 read names from the `exampleInputFilenames.txt` input file. This option is especially useful in cases where I1 reads are not available. Otherwise, for the example data, FASTR will create four subdirectories in the output `/results` directory (Fig.3, left), each with a different sample index and contains close to 100 cells (Fig.3, right). The explanation is that 10x Genomics always includes [four different oligos for sample index reads](https://kb.10xgenomics.com/hc/en-us/articles/218168503-What-oligos-are-in-my-sample-index-) in runs with only one sample, therefore there are only ~100 valid cells present (see 10x's [summary](http://cf.10xgenomics.com/samples/cell-exp/1.2.0/hgmm_100/hgmm_100_web_summary.html)). 
+The output consists of a number of fastq files in the `/results` directory, each one representing reads from one cell (Fig.2). The results are compressed by default and `--gz False` can be used to obtain uncompressed results with a small performance gain. Note that `--ig True` is used to force scSplitter to consider all reads to be from the same sample. Alternatively, the user can simply omit the I1 read names from the `exampleInputFilenames.txt` input file. This option is especially useful in cases where I1 reads are not available. Otherwise, for the example data, scSplitter will create four subdirectories in the output `/results` directory (Fig.3, left), each with a different sample index and contains close to 100 cells (Fig.3, right). The explanation is that 10x Genomics always includes [four different oligos for sample index reads](https://kb.10xgenomics.com/hc/en-us/articles/218168503-What-oligos-are-in-my-sample-index-) in runs with only one sample, therefore there are only ~100 valid cells present (see 10x's [summary](http://cf.10xgenomics.com/samples/cell-exp/1.2.0/hgmm_100/hgmm_100_web_summary.html)). 
 
 **Fig.3** Output fastq files if not using `--ig True`
 
@@ -76,7 +76,7 @@ The output consists of a number of fastq files in the `/results` directory, each
 
 The summary log indicates that 82.31% of aligned reads were selected. This means that reads with the same cell and UMI barcodes but diferrent sample indeces largely aligned to the same positions. In this case, it appears safe to pool reads from different sample indices. Conversely, if only a small fraction of aligned reads were selected, it may be a sign that multiple samples are present and the sample index should not be ignored. For runs containing multiple samples, I1 reads must be provided and the `--ig` option must be left at the default `True` value to demultiplex the different samples.
 
-It may seem odd that only 58.48% of reads aligned successfully. However, this sample data is a mix of mouse and human cells, and this tutorial only aligned to a human reference genome. When using the mouse mm10 reference index, 44.37% of the reads aligned to the genome. Note that there is overlap due to similarities between the mouse and human genomes. FASTR currently only aligns to one genome for each run. 
+It may seem odd that only 58.48% of reads aligned successfully. However, this sample data is a mix of mouse and human cells, and this tutorial only aligned to a human reference genome. When using the mouse mm10 reference index, 44.37% of the reads aligned to the genome. Note that there is overlap due to similarities between the mouse and human genomes. scSplitter currently only aligns to one genome for each run. 
 
 
 
