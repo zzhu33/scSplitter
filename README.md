@@ -29,7 +29,7 @@ A STAR reference index is required. Refer to the [STAR manual](https://github.co
 ## Tutorial
 This tutorial will guide the user in processing a sample scRNA seq result from 10x Genomic. 
 ### Inputs
-The example inputs are [sample fastqs](http://cf.10xgenomics.com/samples/cell-exp/1.2.0/hgmm_100/hgmm_100_fastqs.tar) from 10x Genomics. The tarball needs to be extracted, although the individual files can be left as .fastq.gz files, or extracted fully as .fastq files. These files should appears similar to those shown in Fig.1. In this example, these input fastqs are placed in `/home/scSplitter_testing/fastqs`.
+The example inputs are [sample fastqs](http://cf.10xgenomics.com/samples/cell-exp/2.1.0/hgmm_100/hgmm_100_fastqs.tar) from 10x Genomics. The tarball needs to be extracted, although the individual files can be left as .fastq.gz files, or extracted fully as .fastq files. These files should appears similar to those shown in Fig.1. In this example, these input fastqs are placed in `/home/scSplitter_testing/fastqs`.
 
 **Fig.1:** Input fastq files.
 
