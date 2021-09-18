@@ -6,7 +6,7 @@ scSplitter is a preprocessing tool designed to convert scRNA seq results into a 
 Researchers interested in the application of scSplitter in a [larger pipeline***](https://github.com/<tl repo>) and other bioinformatics tools can visit Dr. Tao Wang's [lab website](https://qbrc.swmed.edu/labs/wanglab/index.php) for more information. 
 ## Getting started
 ### Installation
-scSplitter is written in python can be downloaded from [GitHub](https://github.com/zzhu33/scSplitter/blob/master/scSplitter_v0.9.5.zip). 
+scSplitter is written in python can be downloaded from [GitHub](https://github.com/zzhu33/scSplitter/releases). 
 #### System requirements
 scSplitter requires a linux x86-64 operating system with basic utilities (split and gzip; tested on RHEL 6, kernel 3.10.0-693).
 
@@ -18,7 +18,9 @@ Hardware requirements are dependent on reference genome size, CPU, and input siz
 [STAR](https://github.com/alexdobin/STAR) (tested using version 2.6.1b)
 
 python 3.6.4 or 3.7.4
-  
+
+psutil
+
 **python packages**
 
 numpy, pandas
