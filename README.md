@@ -3,7 +3,7 @@
 ## Introduction
 scSplitter is a preprocessing tool designed to convert scRNA seq results into a format suitable for mutation or SNV calling at the single cell level for the purpose of lineage tracing. The output is incidentally suitable for use with general high-throughput sequencing analysis tools to examine the transcriptome of each individual cell. The main advantage of scRNA seq is that it allows researchers to sequence individual cells, whereas more traditional techniques sequence the aggregate genetic material from a population of cells. However, this means that scRNA seq results contain a mix of reads from perhaps thousands of different cells. scSplitter separates sequencing reads from scRNAseq by their cell of origin and performs preliminary QC using STAR alignment, producing high-quality inputs for finding rare mutations in individual cells.
 
-Researchers interested in the application of scSplitter in a [larger pipeline***](https://github.com/tianshilu/QBRC-Somatic-Pipeline) and other bioinformatics tools can visit Dr. Tao Wang's [lab website](https://qbrc.swmed.edu/labs/wanglab/index.php) for more information. 
+Researchers interested in the application of scSplitter in a [larger pipeline](https://github.com/tianshilu/QBRC-Somatic-Pipeline) and other bioinformatics tools can visit Dr. Tao Wang's [lab website](https://qbrc.swmed.edu/labs/wanglab/index.php) for more information. 
 ## Getting started
 ### Installation
 scSplitter is written in python can be downloaded from [GitHub](https://github.com/zzhu33/scSplitter/releases). 
